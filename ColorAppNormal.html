@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Color Game</title>
+	<style type="text/css">
+		body{
+			background: #232323;
+		}
+		#main{
+			background-color: #7777ff;
+			color:#ffffff;
+			text-align: center;
+		}
+		#score{
+			font-size: 250%;
+			}
+		#topic{
+			font-size:130%;
+		}
+		p{
+			margin-top:3px;
+			margin-bottom:3px;
+		}
+		#startline{
+			font-size:70%;
+			text-align:center;
+			color:#7777ff;
+			background:white;
+		}
+		#new{
+			margin-left:200px;
+		}
+		#easy{
+			margin-left: 100px;
+	        margin-right: 100px;
+	    }
+	    #hard{
+	    	margin-right: 100px;
+	    }
+	    #board{
+	    	padding-top: 10px;
+	    	padding-bottom: 90px;
+	    }
+	   	td{
+	   		size: 200px;
+	   		background: red;
+	   		padding: 50px;
+	   	}
+	   	#tbl{
+	   		background-position: center;
+	   		margin:auto;
+	   	}
+	   	td{
+	   		margin-left:100px;
+	   	}
+	   	.result{
+	   		text-align: center;
+	   		margin:auto;
+	   		font-size: 200%;
+	   		font-family: georgia;
+	   		color: #232323;
+	   		color: white;
+	   	}
+	   	.res{
+	   		color: #232323;
+	   	}
+	   	#points{
+	   		color: white;
+	   		font-style:;
+	   	}
+	   	#creater{
+	   		font-size: 80%;
+	   		color:#ffff55;
+	   		text-align: center;
+	   		font-style: candara;
+	   	}
+	</style>
+</head>
+<body>
+	<div id="main">
+		<p id="topic">THE GREAT</p>
+		<p id="score">RGB(0,0,0)</p>
+		<p id="topic">GUESSING GAME</p>
+	</div>
+	<div>
+		<p id="startline"><span id="new">NEW COLORS</span> <span id="easy">EASY <span id="hard">HARD</span></span></p>
+	</div>
+	<div id="board">
+		<table id="tbl">
+			<tr>
+				<td class="squares">1</td>
+				<td class="squares">2</td>
+				<td class="squares">3</td>
+			</tr>
+			<tr>
+				<td class="squares">4</td>
+				<td class="squares">5</td>
+				<td class="squares">6</td>
+			</tr>
+			<tr>
+				<td class="squares">7</td>
+				<td class="squares">8</td>
+				<td class="squares">9</td>
+			</tr>
+		</table>
+		<h1 id="res1">Congrasulations You Have won!</h1>
+	</div>
+	<div id="points">
+		<ul>
+			<li>Main points of this app are:</li>
+			<ul>
+			<li>This app is for childrens who wants to learn different colors.</li>
+			<li>This app have beautiful animations and colors.</li>
+			<li>There are levels from easy to hard.</li>
+			<li>These colors boxes produces sound of that colors when clicked.</li>
+			<li>This app also have beautiful poem app inside.</li>
+			<li>This app also make learn childrens poems with animations</li>
+		</ul>
+		</ul>
+	</div>
+	<div style="text-align: center;" "margin:auto;">
+		<a id="creater" href="https//:www.royalpankz.facebook.com">Facebook</a>
+		<a id="creater" href="https//:www.royalpankz.instagram.com">Instagram</a>
+		<a id="creater" href="https//:www.royalpankz@gmail.com">Gmail</a>
+	</div>
+	<script type="text/javascript">
+		function getRandom(max){
+			var num=Math.floor(Math.random()*Math.floor(max));
+			return num;
+		}
+		var clrs=[];
+		for (var i = 0;i<9;i++){
+			clrs.push("rgb("+getRandom(255)+", "+getRandom(255)+", "+getRandom(255)+")");
+		}
+		var square=document.querySelectorAll(".squares");
+		var scoreColor=document.querySelector("#score");
+		var main=document.querySelector("#main");
+		var rslt=document.querySelector("#res1");
+		rslt.classList.add("res")
+		var rand=getRandom(8);
+		var pickedColor=clrs[rand];
+		scoreColor.textContent=pickedColor;
+		for(var i = 0; i<square.length; i++){
+			square[i].style.backgroundColor=clrs[i];
+			square[i].addEventListener("click",function(){
+				if(this.style.backgroundColor==pickedColor){
+					for (var i=0;i<square.length;i++){
+						square[i].style.backgroundColor=pickedColor;
+					}
+					main.style.backgroundColor=pickedColor;
+					rslt.classList.remove("res");
+					rslt.classList.add("result");
+				}
+				else{
+					this.style.backgroundColor="#232323";
+				}
+			});
+		}
+	</script>
+</body>
+</html>
