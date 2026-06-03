@@ -274,14 +274,44 @@
   const rnd = max => Math.floor(Math.random() * (max + 1));
   const toRgb = (r,g,b) => `rgb(${r}, ${g}, ${b})`;
 
-  // For HARD mode we generate colours that are close together (look-alikes).
-  function makeColors(n){
-    if(level !== "hard"){
-      return Array.from({length:n}, () => toRgb(rnd(255), rnd(255), rnd(255)));
+  function makeColors(n) {
+    const minDist = { easy: 150, medium: 80, hard: 40 };
+    const threshold = minDist[level];
+    const result = [];
+
+    function dist(a, b) {
+      const [r1,g1,b1] = parse(a);
+      const [r2,g2,b2] = parse(b);
+      return Math.sqrt((r1-r2)**2 + (g1-g2)**2 + (b1-b2)**2);
     }
-    const base = [rnd(255), rnd(255), rnd(255)];
-    const jitter = v => Math.max(0, Math.min(255, v + (rnd(60) - 30)));
-    return Array.from({length:n}, () => toRgb(jitter(base[0]), jitter(base[1]), jitter(base[2])));
+
+    function isFarEnough(candidate) {
+      return result.every(c => dist(c, candidate) >= threshold);
+    }
+
+    let attempts = 0;
+    while (result.length < n && attempts < 1000) {
+      attempts++;
+      let candidate;
+
+      if (level === "hard" && result.length > 0) {
+        // Hard: all colors share same hue family, vary saturation/brightness only
+        const base = parse(result[0]);
+        const jitter = v => Math.max(0, Math.min(255, v + (rnd(80) - 40)));
+        candidate = toRgb(jitter(base[0]), jitter(base[1]), jitter(base[2]));
+      } else {
+        candidate = toRgb(rnd(255), rnd(255), rnd(255));
+      }
+
+      if (isFarEnough(candidate)) result.push(candidate);
+    }
+
+    // Fallback: if we couldn't fill (very unlikely), relax and push random
+    while (result.length < n) {
+      result.push(toRgb(rnd(255), rnd(255), rnd(255)));
+    }
+
+    return result;
   }
 
   function parse(rgb){ return rgb.match(/\d+/g).map(Number); }
