@@ -264,6 +264,7 @@
   let colors = [];
   let target = "";
   let locked = false;
+  let remaining = 0;
 
   let score = 0, streak = 0, best = 0;
 
@@ -275,7 +276,8 @@
   const toRgb = (r,g,b) => `rgb(${r}, ${g}, ${b})`;
 
   function makeColors(n) {
-    const minDist = { easy: 150, medium: 80, hard: 40 };
+    // const minDist = { easy: 150, medium: 80, hard: 40 };
+    const minDist = { easy: 150, medium: 80, hard: 55 };
     const threshold = minDist[level];
     const result = [];
 
@@ -297,7 +299,8 @@
       if (level === "hard" && result.length > 0) {
         // Hard: all colors share same hue family, vary saturation/brightness only
         const base = parse(result[0]);
-        const jitter = v => Math.max(0, Math.min(255, v + (rnd(80) - 40)));
+        // const jitter = v => Math.max(0, Math.min(255, v + (rnd(80) - 40)));
+        const jitter = v => Math.max(0, Math.min(255, v + (rnd(140) - 70)));
         candidate = toRgb(jitter(base[0]), jitter(base[1]), jitter(base[2]));
       } else {
         candidate = toRgb(rnd(255), rnd(255), rnd(255));
@@ -331,6 +334,7 @@
   function newRound(){
     locked = false;
     const n = LEVELS[level];
+    remaining = n;
     colors = makeColors(n);
     target = colors[rnd(n - 1)];
     renderTarget();
@@ -351,10 +355,11 @@
     if(locked) return;
     if(color === target){
       locked = true;
-      const gain = 10 + streak * 5;        // streak bonus
-      streak++;
+      const n = LEVELS[level];
+      const gain = Math.round((n * 10) * (remaining / n));
       score += gain;
       best = Math.max(best, score);
+      streak++;
       updateScores(true);
       document.querySelectorAll(".tile").forEach(t => {
         t.style.background = target;
@@ -363,8 +368,8 @@
       launchConfetti();
       showPopup(true, gain);
     } else {
+      remaining--;
       streak = 0;
-      score = Math.max(0, score - 2);
       updateScores(false);
       tile.classList.add("wrong");
       setTimeout(() => { tile.classList.remove("wrong"); tile.classList.add("gone"); }, 400);
